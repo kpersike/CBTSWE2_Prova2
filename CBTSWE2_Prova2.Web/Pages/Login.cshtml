@@ -1,0 +1,93 @@
+﻿@page
+@model CBTSWE2_Prova2.Web.Pages.LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5 col-lg-4">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-dark text-white text-center">
+                    <h4 class="mb-0">Sistema de Produtos</h4>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <h5 class="text-center mb-2">
+                        Acesso ao sistema
+                    </h5>
+
+                    <p class="text-muted text-center mb-4">
+                        Informe suas credenciais para continuar.
+                    </p>
+
+                    <form method="post">
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="text-danger mb-3">
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label asp-for="Login.Nome"
+                                   class="form-label">
+                                Usuário
+                            </label>
+
+                            <input asp-for="Login.Nome"
+                                   class="form-control"
+                                   placeholder="Digite seu usuário"
+                                   autocomplete="username"
+                                   autofocus />
+
+                            <span asp-validation-for="Login.Nome"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label asp-for="Login.Senha"
+                                   class="form-label">
+                                Senha
+                            </label>
+
+                            <input asp-for="Login.Senha"
+                                   type="password"
+                                   class="form-control"
+                                   placeholder="Digite sua senha"
+                                   autocomplete="current-password" />
+
+                            <span asp-validation-for="Login.Senha"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Entrar
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <div class="card-footer text-center text-muted">
+                    Sistemas Web 2 — Prova II
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

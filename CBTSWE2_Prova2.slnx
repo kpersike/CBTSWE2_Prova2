@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CBTSWE2_Prova2.API/CBTSWE2_Prova2.API.csproj" />
+  <Project Path="CBTSWE2_Prova2.Desktop/CBTSWE2_Prova2.Desktop.csproj" />
+  <Project Path="CBTSWE2_Prova2.Web/CBTSWE2_Prova2.Web.csproj" />
+  <Project Path="CBTSWE2_Prova2/CBTSWE2_Prova2.Core.csproj" />
+</Solution>

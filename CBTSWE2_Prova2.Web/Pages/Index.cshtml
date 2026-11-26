@@ -1,0 +1,502 @@
+﻿@page
+@model CBTSWE2_Prova2.Web.Pages.IndexModel
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Produtos";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between
+        align-items-center mb-3">
+
+        <div>
+            <h1>Produtos</h1>
+
+            <p class="text-muted mb-0">
+                Gerencie os produtos cadastrados no sistema.
+            </p>
+        </div>
+
+        <button type="button"
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#modalCadastro">
+
+            + Novo produto
+
+        </button>
+
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.MensagemSucesso))
+    {
+        <div class="alert alert-success
+            alert-dismissible fade show">
+
+            @Model.MensagemSucesso
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.MensagemErro))
+    {
+        <div class="alert alert-danger
+            alert-dismissible fade show">
+
+            @Model.MensagemErro
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+    <div class="table-responsive">
+
+        <table class="table table-striped
+            table-bordered table-hover
+            align-middle">
+
+            <thead class="table-dark">
+
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                    <th>Status</th>
+                    <th>ID Cadastro</th>
+                    <th>ID Update</th>
+                    <th>Ações</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @if (Model.Produtos.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7"
+                            class="text-center text-muted">
+
+                            Nenhum produto para exibir.
+
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var produto in Model.Produtos)
+                    {
+                        <tr>
+
+                            <td>@produto.Id</td>
+
+                            <td>@produto.Nome</td>
+
+                            <td>
+                                @produto.Preco.ToString(
+                                    "C2",
+                                    new CultureInfo("pt-BR")
+                                )
+                            </td>
+
+                            <td>
+                                @if (produto.Status)
+                                {
+                                    <span class="badge bg-success">
+                                        Ativo
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">
+                                        Inativo
+                                    </span>
+                                }
+                            </td>
+
+                            <td>@produto.IdUsuarioCadastro</td>
+
+                            <td>@produto.IdUsuarioUpdate</td>
+
+                            
+                            <td>
+                                <div class="d-flex gap-2">
+
+                                    <button type="button"
+                                            class="btn btn-warning btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalEdicao"
+                                            data-id="@produto.Id"
+                                            data-nome="@produto.Nome"
+                                            data-preco="@produto.Preco.ToString(CultureInfo.InvariantCulture)"
+                                            data-status="@produto.Status.ToString().ToLowerInvariant()">
+
+                                        Editar
+
+                                    </button>
+
+                                    <form method="post"
+                                          asp-page-handler="Excluir"
+                                          asp-route-id="@produto.Id"
+                                          onsubmit="return confirm('Deseja realmente excluir este produto?');">
+
+                                        <button type="submit"
+                                                class="btn btn-danger btn-sm">
+
+                                            Excluir
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+                            </td>
+
+
+                        </tr>
+                    }
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <p class="text-muted">
+        Total de produtos: @Model.Produtos.Count
+    </p>
+
+</div>
+
+<!-- Modal de cadastro -->
+
+<div class="modal fade"
+     id="modalCadastro"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <form method="post">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Cadastrar produto
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div asp-validation-summary="All"
+                         class="text-danger mb-3">
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label asp-for="NovoProduto.Nome"
+                               class="form-label">
+                            Nome
+                        </label>
+
+                        <input asp-for="NovoProduto.Nome"
+                               class="form-control"
+                               maxlength="150" />
+
+                        <span asp-validation-for="NovoProduto.Nome"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label asp-for="NovoProduto.Preco"
+                               class="form-label">
+                            Preço (R$)
+                        </label>
+
+                        <input asp-for="NovoProduto.Preco"
+                               type="number"
+                               min="0.01"
+                               step="0.01"
+                               class="form-control" />
+
+                        <span asp-validation-for="NovoProduto.Preco"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="form-check">
+
+                        <input asp-for="NovoProduto.Status"
+                               class="form-check-input" />
+
+                        <label asp-for="NovoProduto.Status"
+                               class="form-check-label">
+
+                            Produto ativo
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-success">
+
+                        Cadastrar
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Modal de edição -->
+
+<div class="modal fade"
+     id="modalEdicao"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <form method="post"
+                  asp-page-handler="Atualizar">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Editar produto
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="text-danger mb-3">
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label asp-for="IdProdutoEdicao"
+                               class="form-label">
+                            ID do produto
+                        </label>
+
+                        <input asp-for="IdProdutoEdicao"
+                               class="form-control"
+                               readonly />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label asp-for="ProdutoEdicao.Nome"
+                               class="form-label">
+                            Nome
+                        </label>
+
+                        <input asp-for="ProdutoEdicao.Nome"
+                               class="form-control"
+                               maxlength="150" />
+
+                        <span asp-validation-for="ProdutoEdicao.Nome"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label asp-for="ProdutoEdicao.Preco"
+                               class="form-label">
+                            Preço (R$)
+                        </label>
+
+                        <input asp-for="ProdutoEdicao.Preco"
+                               type="number"
+                               min="0.01"
+                               step="0.01"
+                               class="form-control" />
+
+                        <span asp-validation-for="ProdutoEdicao.Preco"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="form-check">
+
+                        <input asp-for="ProdutoEdicao.Status"
+                               class="form-check-input" />
+
+                        <label asp-for="ProdutoEdicao.Status"
+                               class="form-check-label">
+
+                            Produto ativo
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-warning">
+
+                        Salvar alterações
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const modalEdicao =
+                    document.getElementById("modalEdicao");
+
+                modalEdicao.addEventListener(
+                    "show.bs.modal",
+                    function (event) {
+
+                        const botao = event.relatedTarget;
+
+                        if (!botao)
+                            return;
+
+                        document.getElementById(
+                            "IdProdutoEdicao"
+                        ).value = botao.dataset.id;
+
+                        document.getElementById(
+                            "ProdutoEdicao_Nome"
+                        ).value = botao.dataset.nome;
+
+                        document.getElementById(
+                            "ProdutoEdicao_Preco"
+                        ).value = botao.dataset.preco;
+
+                        document.getElementById(
+                            "ProdutoEdicao_Status"
+                        ).checked =
+                            botao.dataset.status === "true";
+                    }
+                );
+
+            }
+        );
+
+    </script>
+
+    @if (Model.AbrirModalCadastro)
+    {
+        <script>
+            document.addEventListener(
+                "DOMContentLoaded",
+                function () {
+
+                    const modal = new bootstrap.Modal(
+                        document.getElementById("modalCadastro")
+                    );
+
+                    modal.show();
+                }
+            );
+        </script>
+    }
+
+    @if (Model.AbrirModalEdicao)
+    {
+        <script>
+            document.addEventListener(
+                "DOMContentLoaded",
+                function () {
+
+                    const modal = new bootstrap.Modal(
+                        document.getElementById("modalEdicao")
+                    );
+
+                    modal.show();
+                }
+            );
+        </script>
+    }
+}
+

@@ -1,0 +1,19 @@
+[
+  {
+    "Name": "Novo Perfil",
+    "Projects": [
+      {
+        "Path": "CBTSWE2_Prova2.API\\CBTSWE2_Prova2.API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "CBTSWE2_Prova2.Web\\CBTSWE2_Prova2.Web.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "CBTSWE2_Prova2.Desktop\\CBTSWE2_Prova2.Desktop.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
